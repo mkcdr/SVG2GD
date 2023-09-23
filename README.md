@@ -2,7 +2,7 @@
 
 Single PHP class to convert SVG to GD images
 
-## Requirement
+## Requirements
 
 - PHP version 7.2 or higher.
 - SimpleXML library enabled, for reading SVG strings and files.
