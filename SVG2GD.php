@@ -302,8 +302,6 @@ class SVG2GD
 
                 case 'path':
                     $path = $this->currentAttributes['d'];
-                    $path = $this->reformatPathString($path);
-                    
                     $this->drawPath($path, $fill, $stroke, $thickness);
                     break;
 
@@ -418,6 +416,24 @@ class SVG2GD
             else
             {
                 $color = imagecolorallocate($this->image, $color[0], $color[1], $color[2]);
+            }
+        }
+        elseif (preg_match('/rgba?\(\s*(\d*(?:\.\d+)?\s*(?:,\s*\d*(?:\.\d+)?){2}(?:,\s*\d*(?:\.\d+)?%?)?)\s*\)/', $color, $matches))
+        {
+            $color = array_map(function($i) { return trim($i); }, explode(',', $matches[1]));
+            
+            if (isset($color[3]))
+            {
+                if (strpos($color[3], '%') !== false)
+                {
+                    $color[3] = trim($color[3], '%') / 100;
+                }
+                
+                $color = imagecolorallocatealpha(imagecreatetruecolor(10,10), $color[0], $color[1], $color[2], 0x7f - 0x7f * $color[3]);
+            }
+            else
+            {
+                $color = imagecolorallocate(imagecreatetruecolor(10,10), $color[0], $color[1], $color[2]);
             }
         }
         
